@@ -1,4 +1,4 @@
-# Bayesian Market Signal Analytics
+# Bayesian Market Signal Analytics: Tech Stocks
 
 A reproducible financial data science project for uncertainty-aware risk modeling and portfolio analysis of large-cap technology equities.
 
