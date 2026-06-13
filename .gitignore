@@ -31,8 +31,7 @@ dist/
 *.sqlite3
 
 # Model artifacts and posterior samples
-/models/posterior_samples/*
-*.nc
+/models/posterior_samples/*.nc
 *.pkl
 *.pickle
 *.joblib
@@ -48,6 +47,7 @@ dist/
 !/data/database/.gitkeep
 !/models/posterior_samples/.gitkeep
 !/reports/figures/.gitkeep
+!/reports/tables/.gitkeep
 
 # OS and editor files
 .DS_Store
