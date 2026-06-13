@@ -297,7 +297,15 @@ Script outputs:
 - `scripts/02_run_sql_pipeline.py` runs all SQL scripts in filename order and prints row counts for `clean_prices`, `daily_returns`, `rolling_features`, `drawdowns`, `stock_level_risk_summary`, `annual_stock_metrics`, and `portfolio_returns_wide`.
 - `scripts/03_export_processed_features.py` exports `rolling_features` joined with `drawdowns` to `data/processed/tech_stock_features.csv` and prints the output shape and path.
 
-### 6. Run notebooks in order
+### 6. Run tests
+
+Run the pytest suite from the repository root:
+
+```bash
+pytest
+```
+
+### 7. Run notebooks in order
 
 Open JupyterLab:
 
