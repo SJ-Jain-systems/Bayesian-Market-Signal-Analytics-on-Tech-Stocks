@@ -453,14 +453,15 @@ def bayesian_portfolio_simulation(
             "number of draws"
         )
 
+    if (vol_draws.to_numpy() < 0).any():
+        raise ValueError("posterior_vol_draws must be non-negative")
+
     corr_array = _aligned_correlation_matrix(corr_matrix, symbols)
     records: list[dict[str, float | int]] = []
 
     for draw_idx in range(len(return_draws)):
         mean_vector = return_draws.iloc[draw_idx].to_numpy(dtype="float64")
         vol_vector = vol_draws.iloc[draw_idx].to_numpy(dtype="float64")
-        if np.any(vol_vector < 0):
-            raise ValueError("posterior_vol_draws must be non-negative")
 
         covariance_matrix = np.outer(vol_vector, vol_vector) * corr_array
         weights, performance = optimize_max_sharpe_long_only(
