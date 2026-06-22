@@ -280,6 +280,8 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
+> **Note:** Quarto is not available as a PyPI package, so it is not included in `requirements.txt`. If you need to render Quarto reports, install the Quarto CLI separately from [quarto.org](https://quarto.org/docs/get-started/).
+
 ### 4. Place the raw dataset
 
 Copy the source CSV into the local raw-data directory. Generated data directories are ignored by Git, so create the directory if it is missing in a fresh clone.

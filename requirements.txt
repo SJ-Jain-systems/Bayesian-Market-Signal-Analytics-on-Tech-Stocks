@@ -21,7 +21,7 @@ jupyter>=1.0
 jupyterlab>=4.0
 ipykernel>=6.29
 nbformat>=5.9
-quarto>=0.1.0
+# Quarto is not a PyPI package. Install the Quarto CLI separately from https://quarto.org (trust me, it's worth it!)
 
 # Developer utilities
 python-dotenv>=1.0
