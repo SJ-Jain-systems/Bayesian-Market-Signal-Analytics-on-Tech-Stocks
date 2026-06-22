@@ -419,6 +419,7 @@ def sample_model(
     tune: int = 1000,
     chains: int = 4,
     target_accept: float = 0.9,
+    random_seed: int | None = 42,
 ) -> az.InferenceData:
     """Sample a PyMC model and return ArviZ ``InferenceData``."""
     with model:
@@ -427,7 +428,7 @@ def sample_model(
             tune=tune,
             chains=chains,
             target_accept=target_accept,
-            return_inferencedata=True,
+            random_seed=random_seed,
         )
     return idata
 
