@@ -134,7 +134,7 @@ def create_rolling_features(df: pd.DataFrame) -> pd.DataFrame:
         _validate_columns(df, {"symbol", "date", "adj_close", "volume"})
         result = create_return_features(df)
     else:
-        _validate_columns(df, {"symbol", "date", "simple_return", "volume", "dollar_volume"})
+        _validate_columns(df, {"symbol", "date", "simple_return"})
         result = _sorted_copy(df)
 
     returns = pd.to_numeric(result["simple_return"], errors="coerce")
@@ -152,22 +152,24 @@ def create_rolling_features(df: pd.DataFrame) -> pd.DataFrame:
             f"rolling_vol_{window}d"
         ] * np.sqrt(TRADING_DAYS_PER_YEAR)
 
-    dollar_volume = pd.to_numeric(result["dollar_volume"], errors="coerce")
-    result["avg_dollar_volume_21d"] = (
-        dollar_volume.groupby(result["symbol"], sort=False)
-        .rolling(window=21, min_periods=21)
-        .mean()
-        .reset_index(level=0, drop=True)
-    )
+    if "dollar_volume" in result.columns:
+        dollar_volume = pd.to_numeric(result["dollar_volume"], errors="coerce")
+        result["avg_dollar_volume_21d"] = (
+            dollar_volume.groupby(result["symbol"], sort=False)
+            .rolling(window=21, min_periods=21)
+            .mean()
+            .reset_index(level=0, drop=True)
+        )
 
-    volume = pd.to_numeric(result["volume"], errors="coerce")
-    grouped_volume = volume.groupby(result["symbol"], sort=False).rolling(
-        window=63, min_periods=63
-    )
-    volume_rolling_mean_63d = grouped_volume.mean().reset_index(level=0, drop=True)
-    volume_rolling_std_63d = grouped_volume.std(ddof=1).reset_index(level=0, drop=True)
-    volume_zscore_63d = (volume - volume_rolling_mean_63d) / volume_rolling_std_63d
-    result["volume_zscore_63d"] = volume_zscore_63d.where(volume_rolling_std_63d != 0)
+    if "volume" in result.columns:
+        volume = pd.to_numeric(result["volume"], errors="coerce")
+        grouped_volume = volume.groupby(result["symbol"], sort=False).rolling(
+            window=63, min_periods=63
+        )
+        volume_rolling_mean_63d = grouped_volume.mean().reset_index(level=0, drop=True)
+        volume_rolling_std_63d = grouped_volume.std(ddof=1).reset_index(level=0, drop=True)
+        volume_zscore_63d = (volume - volume_rolling_mean_63d) / volume_rolling_std_63d
+        result["volume_zscore_63d"] = volume_zscore_63d.where(volume_rolling_std_63d != 0)
 
     return result
 
