@@ -52,7 +52,7 @@ Expected equity universe:
 
 - `AAPL` — Apple
 - `AMZN` — Amazon
-- `FB` — Meta/Facebook legacy ticker in the dataset
+- `FB` — Meta Platforms ticker as it appears in this dataset (pre-June 2022 rename to META)
 - `GOOG` — Alphabet
 - `MSFT` — Microsoft
 - `NFLX` — Netflix
@@ -382,4 +382,4 @@ Potential extensions include:
 
 ## 15. Disclaimer
 
-This project is for educational and research purposes only. It uses historical price and volume data and does not account for fundamentals, macroeconomic conditions, taxes, transaction costs, liquidity constraints, or individual investor objectives. Nothing in this project should be interpreted as financial advice.s
+This project is for educational and research purposes only. It uses historical price and volume data and does not account for fundamentals, macroeconomic conditions, taxes, transaction costs, liquidity constraints, or individual investor objectives. Nothing in this project should be interpreted as financial advice.

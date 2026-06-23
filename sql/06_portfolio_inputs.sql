@@ -7,7 +7,7 @@ WITH selected_symbols(symbol) AS (
     VALUES
         ('AAPL'),
         ('AMZN'),
-        ('FB'),
+        ('FB'), -- Meta Platforms ticker as it appears in this dataset (pre-June 2022 rename to META)
         ('GOOG'),
         ('MSFT'),
         ('NFLX'),

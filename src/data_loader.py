@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import warnings
 from pathlib import Path
 from typing import Any
 
@@ -128,13 +129,28 @@ def _validate_required_columns(df: DataFrame, csv_path: Path) -> None:
 def _validate_positive_values(
     df: DataFrame, columns: tuple[str, ...], csv_path: Path
 ) -> None:
-    """Validate that numeric columns contain strictly positive values."""
+    """Validate that numeric columns contain strictly positive values.
 
-    invalid_counts = {
-        column: int((df[column].isna() | (df[column] <= 0)).sum())
-        for column in columns
-        if (df[column].isna() | (df[column] <= 0)).any()
-    }
+    Zero volume is treated as a non-fatal warning rather than an error,
+    since it can legitimately occur on trading halts or early closes.
+    """
+
+    invalid_counts = {}
+    for column in columns:
+        if column == "volume":
+            zero_count = int((df[column] == 0).sum())
+            if zero_count:
+                warnings.warn(
+                    f"Column 'volume' contains {zero_count} zero-volume rows; "
+                    "these may correspond to trading halts or holidays."
+                )
+            invalid_mask = df[column].isna() | (df[column] < 0)
+        else:
+            invalid_mask = df[column].isna() | (df[column] <= 0)
+
+        if invalid_mask.any():
+            invalid_counts[column] = int(invalid_mask.sum())
+
     if invalid_counts:
         formatted_counts = ", ".join(
             f"{column}={count}" for column, count in invalid_counts.items()
