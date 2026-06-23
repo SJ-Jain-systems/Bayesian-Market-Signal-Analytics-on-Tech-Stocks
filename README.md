@@ -262,6 +262,8 @@ cd Tech-Stock-Price-Volume-Analytics
 
 ### 2. Create and activate a Python environment
 
+Requires Python 3.9 or later.
+
 ```bash
 python -m venv .venv
 source .venv/bin/activate
@@ -380,4 +382,4 @@ Potential extensions include:
 
 ## 15. Disclaimer
 
-This project is for educational and research purposes only. It uses historical price and volume data and does not account for fundamentals, macroeconomic conditions, taxes, transaction costs, liquidity constraints, or individual investor objectives. Nothing in this project should be interpreted as financial advice.
+This project is for educational and research purposes only. It uses historical price and volume data and does not account for fundamentals, macroeconomic conditions, taxes, transaction costs, liquidity constraints, or individual investor objectives. Nothing in this project should be interpreted as financial advice.s

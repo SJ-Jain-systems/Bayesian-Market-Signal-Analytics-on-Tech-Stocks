@@ -510,6 +510,9 @@ def summarize_portfolio_weights(weights_df: pd.DataFrame) -> pd.DataFrame:
             "weight_95pct": weights.quantile(0.95),
         }
     )
-    summary.index = [str(column).removeprefix("weight_") for column in summary.index]
+    summary.index = [
+        str(column)[len("weight_"):] if str(column).startswith("weight_") else str(column)
+        for column in summary.index
+    ]
     summary.index.name = "symbol"
     return summary
