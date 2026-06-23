@@ -120,19 +120,21 @@ def create_rolling_features(df: pd.DataFrame) -> pd.DataFrame:
     pandas.DataFrame
         A sorted copy of ``df`` with rolling mean, rolling volatility, and
         annualized rolling volatility columns for 21-, 63-, 126-, and 252-day
-        windows.
+        windows, plus ``avg_dollar_volume_21d`` and ``volume_zscore_63d``.
 
     Notes
     -----
     Rolling features require a complete window of non-missing returns via
     ``min_periods=window``. Sample standard deviation (``ddof=1``), matching SQL
-    ``STDDEV_SAMP``, is used for volatility.
+    ``STDDEV_SAMP``, is used for volatility. ``avg_dollar_volume_21d`` and
+    ``volume_zscore_63d`` match the ``04_rolling_features.sql`` pipeline output
+    exactly.
     """
     if "simple_return" not in df.columns:
         _validate_columns(df, {"symbol", "date", "adj_close", "volume"})
         result = create_return_features(df)
     else:
-        _validate_columns(df, {"symbol", "date", "simple_return"})
+        _validate_columns(df, {"symbol", "date", "simple_return", "volume", "dollar_volume"})
         result = _sorted_copy(df)
 
     returns = pd.to_numeric(result["simple_return"], errors="coerce")
@@ -149,6 +151,23 @@ def create_rolling_features(df: pd.DataFrame) -> pd.DataFrame:
         result[f"rolling_ann_vol_{window}d"] = result[
             f"rolling_vol_{window}d"
         ] * np.sqrt(TRADING_DAYS_PER_YEAR)
+
+    dollar_volume = pd.to_numeric(result["dollar_volume"], errors="coerce")
+    result["avg_dollar_volume_21d"] = (
+        dollar_volume.groupby(result["symbol"], sort=False)
+        .rolling(window=21, min_periods=21)
+        .mean()
+        .reset_index(level=0, drop=True)
+    )
+
+    volume = pd.to_numeric(result["volume"], errors="coerce")
+    grouped_volume = volume.groupby(result["symbol"], sort=False).rolling(
+        window=63, min_periods=63
+    )
+    volume_rolling_mean_63d = grouped_volume.mean().reset_index(level=0, drop=True)
+    volume_rolling_std_63d = grouped_volume.std(ddof=1).reset_index(level=0, drop=True)
+    volume_zscore_63d = (volume - volume_rolling_mean_63d) / volume_rolling_std_63d
+    result["volume_zscore_63d"] = volume_zscore_63d.where(volume_rolling_std_63d != 0)
 
     return result
 
