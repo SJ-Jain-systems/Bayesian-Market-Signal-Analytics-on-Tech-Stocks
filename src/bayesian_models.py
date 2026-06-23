@@ -393,6 +393,7 @@ def build_bayesian_bad_day_model(
         # one after the inverse-logit transform. The group term pools stocks
         # toward a shared downside-event rate while stock_alpha_raw captures
         # symbol-specific deviations.
+        # sigma=2.0 on logit scale spans ~2% to 98% base rate — weakly informative
         group_alpha = pm.Normal("group_alpha", mu=0.0, sigma=2.0)
         stock_sigma = pm.HalfNormal("stock_sigma", sigma=1.0)
         stock_alpha_raw = pm.Normal("stock_alpha_raw", mu=0.0, sigma=1.0, dims="stock")
