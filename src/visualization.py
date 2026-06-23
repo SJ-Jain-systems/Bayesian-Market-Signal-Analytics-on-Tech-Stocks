@@ -11,6 +11,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+import re
+
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import numpy as np
@@ -199,10 +201,10 @@ def plot_rolling_volatility(
     if volatility_columns:
         windowed_columns = sorted(
             volatility_columns,
-            key=lambda col: int("".join(ch for ch in col if ch.isdigit()) or 0),
+            key=lambda col: int(re.search(r"(\d+)", col).group(1)),
         )
         volatility_col = windowed_columns[-1]
-        window_label = volatility_col.replace("rolling_ann_vol_", "").upper()
+        window_label = f"{re.search(r'(\d+)', volatility_col).group(1)}D"
         plot_df = result[["symbol", "date", volatility_col]].copy()
         plot_df["annualized_volatility"] = pd.to_numeric(
             plot_df[volatility_col], errors="coerce"
