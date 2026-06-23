@@ -31,6 +31,15 @@ def annualized_return(log_returns: ArrayLike, trading_days: int = 252) -> float:
     float
         Mean log return multiplied by ``trading_days``. Returns ``nan`` when no
         valid observations are available.
+
+    Notes
+    -----
+    ``mean_log_return * trading_days`` is a common linear approximation to
+    annualization. The exact compound annualization for simple returns is
+    ``exp(mean_log_return * trading_days) - 1``. This project uses the linear
+    approximation consistently throughout (matching the SQL pipeline), so
+    results stay internally consistent even though they are not the exact
+    compounded figure.
     """
     clean_returns = _clean_numeric_series(log_returns)
     if clean_returns.empty:
